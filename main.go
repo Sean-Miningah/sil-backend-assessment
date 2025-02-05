@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"github.com/sean-miningah/sil-backend-assessment/cmd"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -74,7 +75,8 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-	r := setupRouter()
-	// Listen and Server in 0.0.0.0:8080
-	r.Run(":8080")
+	// r := setupRouter()
+	// // Listen and Server in 0.0.0.0:8080
+	// r.Run(":8080")
+	cmd.Execute()
 }
