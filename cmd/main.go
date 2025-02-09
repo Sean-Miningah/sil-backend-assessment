@@ -5,8 +5,9 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sean-miningah/sil-backend-assessment/internal/adpaters/handlers/rest"
-	"github.com/sean-miningah/sil-backend-assessment/internal/adpaters/repositories/postgres"
+	"github.com/sean-miningah/sil-backend-assessment/internal/adapters/handlers/graphql"
+	"github.com/sean-miningah/sil-backend-assessment/internal/adapters/handlers/rest"
+	"github.com/sean-miningah/sil-backend-assessment/internal/adapters/repositories/postgres"
 	"github.com/sean-miningah/sil-backend-assessment/internal/services"
 	"github.com/sean-miningah/sil-backend-assessment/pkg/config"
 	"github.com/sean-miningah/sil-backend-assessment/pkg/database"
@@ -55,10 +56,13 @@ func main() {
 		api.GET("/products/:id", productHandler.Get)
 		api.POST("/products", productHandler.Create)
 		api.PUT("/products/:id", productHandler.Update)
-		api.Delete("/products/:id", productHandler.Delete)
+		api.DELETE("/products/:id", productHandler.Delete)
 	}
 
-	router.POST("/graphql", graphqlHandler.Handle())
+	router.POST("/graphql", graphqlHandler.GraphQL())
+	if cfg.Environment == "development" {
+		router.GET("/playground", graphqlHandler.Playground())
+	}
 
 	// Start the server
 	if err := router.Run(cfg.Server.Address); err != nil {

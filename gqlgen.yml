@@ -8,7 +8,7 @@ exec:
   # layout: single-file # Only other option is "follow-schema," ie multi-file.
 
   # Only for single-file layout:
-  package: generate
+  package: generated
 
   # Only for follow-schema layout:
   # dir: graph

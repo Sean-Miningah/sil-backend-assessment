@@ -26,6 +26,21 @@ func (m *MockProductRepository) Get(ctx context.Context, id uint) (*domain.Produ
 	return args.Get(0).(*domain.Product), args.Error(1)
 }
 
+func (m *MockProductRepository) List(ctx context.Context) ([]domain.Product, error) {
+	args := m.Called(ctx)
+	return args.Get(0).([]domain.Product), args.Error(1)
+}
+
+func (m *MockProductRepository) Update(ctx context.Context, product *domain.Product) error {
+	args := m.Called(ctx, product)
+	return args.Error(0)
+}
+
+func (m *MockProductRepository) Delete(ctx context.Context, id uint) error {
+	args := m.Called(ctx, id)
+	return args.Error(0)
+}
+
 func TestProductService_CreateProduct(t *testing.T) {
 	mockRepo := new(MockProductRepository)
 	service := NewProductService(mockRepo)
