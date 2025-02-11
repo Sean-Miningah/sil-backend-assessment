@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -15,10 +16,23 @@ import (
 )
 
 func main() {
-	cfg := config.Load()
+	cfg := config.Load(".env")
+
+	fmt.Printf("Loaded Config: %+v\n", cfg)
+
+	// Print specific fields
+	fmt.Println("Environment:", cfg.Environment)
+	fmt.Println("Server Address:", cfg.Address)
+	fmt.Println("Database Host:", cfg.DBHost)
+	fmt.Println("Database Port:", cfg.DBPort)
+	fmt.Println("Database User:", cfg.DBUser)
+	fmt.Println("Database Name:", cfg.DBName)
+	fmt.Println("Telemetry Service Name:", cfg.ServiceName)
+	fmt.Println("Jaeger Endpoint:", cfg.JaegerEndpoint)
+	fmt.Println("Prometheus Port:", cfg.PrometheusPort)
 
 	//Initialize tracer
-	tp, err := telemetry.InitTracer(cfg.Telemetry.ServiceName)
+	tp, err := telemetry.InitTracer(cfg.ServiceName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,10 +42,16 @@ func main() {
 		}
 	}()
 
-	// Initialize database
-	db, err := database.NewPostgresDB(cfg.Database)
+	// Construct the PostgreSQL connection string
+	dsn := fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName,
+	)
+
+	// Initialize database connection
+	db, err := database.NewPostgresDB(dsn)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Failed to connect to database:", err)
 	}
 
 	// Initialize repository
@@ -65,7 +85,7 @@ func main() {
 	}
 
 	// Start the server
-	if err := router.Run(cfg.Server.Address); err != nil {
+	if err := router.Run(cfg.Address); err != nil {
 		log.Fatal(err)
 	}
 }

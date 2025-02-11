@@ -5,6 +5,7 @@ go 1.23.6
 require (
 	github.com/99designs/gqlgen v0.17.64
 	github.com/gin-gonic/gin v1.10.0
+	github.com/joho/godotenv v1.5.1
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.10.0
 	github.com/vektah/gqlparser/v2 v2.5.22

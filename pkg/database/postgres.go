@@ -7,20 +7,12 @@ import (
 	"time"
 
 	"github.com/sean-miningah/sil-backend-assessment/internal/core/domain"
-	"github.com/sean-miningah/sil-backend-assessment/pkg/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-func NewPostgresDB(cfg config.DatabaseConfig) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
-		cfg.Host,
-		cfg.User,
-		cfg.Password,
-		cfg.Name,
-		cfg.Port,
-	)
+func NewPostgresDB(cfg string) (*gorm.DB, error) {
 
 	// Configure GORM logger
 	gormLogger := logger.New(
@@ -34,7 +26,7 @@ func NewPostgresDB(cfg config.DatabaseConfig) (*gorm.DB, error) {
 	)
 
 	// Open database connection
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(cfg), &gorm.Config{
 		Logger: gormLogger,
 		NowFunc: func() time.Time {
 			return time.Now().UTC()
