@@ -18,19 +18,6 @@ import (
 func main() {
 	cfg := config.Load(".env")
 
-	fmt.Printf("Loaded Config: %+v\n", cfg)
-
-	// Print specific fields
-	fmt.Println("Environment:", cfg.Environment)
-	fmt.Println("Server Address:", cfg.Address)
-	fmt.Println("Database Host:", cfg.DBHost)
-	fmt.Println("Database Port:", cfg.DBPort)
-	fmt.Println("Database User:", cfg.DBUser)
-	fmt.Println("Database Name:", cfg.DBName)
-	fmt.Println("Telemetry Service Name:", cfg.ServiceName)
-	fmt.Println("Jaeger Endpoint:", cfg.JaegerEndpoint)
-	fmt.Println("Prometheus Port:", cfg.PrometheusPort)
-
 	//Initialize tracer
 	tp, err := telemetry.InitTracer(cfg.ServiceName)
 	if err != nil {
