@@ -1,5 +1,7 @@
 package graphql
 
+//go:generate go run github.com/99designs/gqlgen generate
+
 import (
 	"github.com/sean-miningah/sil-backend-assessment/internal/core/ports"
 )

@@ -2,7 +2,8 @@
 
 generate:
 	@echo "Generating GraphQL code..."
-	@go run github.com/99designs/gqlgen generate
+	@go generate ./...
+	# @go run github.com/99designs/gqlgen generate
 
 clean:
 	@echo "Cleaning generated GraphQL files..."
