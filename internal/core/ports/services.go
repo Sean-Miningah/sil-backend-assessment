@@ -21,3 +21,13 @@ type CategoryService interface {
 	UpdateCategory(ctx context.Context, category *domain.Category) error
 	DeleteCategory(ctx context.Context, id uint) error
 }
+
+type OrderService interface {
+	CreateOrder(ctx context.Context, order *domain.Order) error
+	ListOrders(ctx context.Context) ([]domain.Order, error)
+}
+
+type CustomerService interface {
+	CreateCustomer(ctx context.Context, customer *domain.Customer) error
+	GetCustomer(ctx context.Context, id uint) (*domain.Customer, error)
+}
