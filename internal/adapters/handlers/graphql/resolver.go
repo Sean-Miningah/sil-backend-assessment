@@ -12,15 +12,17 @@ import (
 
 type Resolver struct {
 	productService ports.ProductService
+	orderService   ports.OrderService
 	// categoryService ports.CategoryService
 }
 
-func NewResolver(ps ports.ProductService,
+func NewResolver(ps ports.ProductService, os ports.OrderService,
 
 // cs ports.CategoryService
 ) *Resolver {
 	return &Resolver{
 		productService: ps,
+		orderService:   os,
 		// categoryService: cs,
 	}
 }

@@ -25,6 +25,8 @@ type CategoryService interface {
 type OrderService interface {
 	CreateOrder(ctx context.Context, order *domain.Order) error
 	ListOrders(ctx context.Context) ([]domain.Order, error)
+	GetOrder(ctx context.Context, id uint) (*domain.Order, error)
+	UpdateOrder(ctx context.Context, order *domain.Order) error
 }
 
 type CustomerService interface {

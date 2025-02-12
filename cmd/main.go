@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sean-miningah/sil-backend-assessment/internal/adapters/handlers/graphql"
 	"github.com/sean-miningah/sil-backend-assessment/internal/adapters/handlers/rest"
-	"github.com/sean-miningah/sil-backend-assessment/internal/adapters/repositories/postgres"
+	repo "github.com/sean-miningah/sil-backend-assessment/internal/adapters/repositories/postgres"
 	"github.com/sean-miningah/sil-backend-assessment/internal/services"
 	"github.com/sean-miningah/sil-backend-assessment/pkg/config"
 	"github.com/sean-miningah/sil-backend-assessment/pkg/database"
@@ -42,16 +42,19 @@ func main() {
 	}
 
 	// Initialize repository
-	productRepo := postgres.NewProductRepository(db)
+	productRepo := repo.NewProductRepository(db)
+	orderRepo := repo.NewOrderRepository(db)
 
 	// Initialize service
-	productService := services.NewProductService(productRepo)
+	productService := services.NewProductService(productRepo, orderRepo)
+	orderService := services.NewOrderService(orderRepo, productRepo)
 
 	// Initialize handler
 	productHandler := rest.NewProductHandler(productService)
+	orderHandler := rest.NewOrderHandler(orderService)
 
 	// Initialize GraphQL handler
-	graphqlHandler := graphql.NewHandler(productService)
+	graphqlHandler := graphql.NewHandler(productService, orderService)
 
 	// Gin router setup
 	router := gin.Default()
@@ -64,6 +67,13 @@ func main() {
 		api.POST("/products", productHandler.Create)
 		api.PUT("/products/:id", productHandler.Update)
 		api.DELETE("/products/:id", productHandler.Delete)
+
+		// Order Routes
+		api.GET("/orders", orderHandler.List)
+		api.GET("/orders/:id", orderHandler.Get)
+		api.POST("/orders", orderHandler.Create)
+		api.PUT("/orders/:id", orderHandler.Update)
+		api.DELETE("/order/:id", orderHandler.Delete)
 	}
 
 	router.POST("/graphql", graphqlHandler.GraphQL())

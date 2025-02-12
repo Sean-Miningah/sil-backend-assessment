@@ -33,3 +33,26 @@ func (r *OrderRepository) List(ctx context.Context) ([]domain.Order, error) {
 	err := r.db.WithContext(ctx).Find(&orders).Error
 	return orders, err
 }
+
+func (r *OrderRepository) Get(ctx context.Context, id uint) (*domain.Order, error) {
+	ctx, span := otel.Tracer("").Start(ctx, "OrderRepository.Get")
+	defer span.End()
+
+	var order domain.Order
+	err := r.db.WithContext(ctx).First(&order, id).Error
+	return &order, err
+}
+
+func (r *OrderRepository) Update(ctx context.Context, order *domain.Order) error {
+	ctx, span := otel.Tracer("").Start(ctx, "OrderRepository.Update")
+	defer span.End()
+
+	return r.db.WithContext(ctx).Save(order).Error
+}
+
+func (r *OrderRepository) Delete(ctx context.Context, id uint) error {
+	ctx, span := otel.Tracer("").Start(ctx, "OrderRepository.Delete")
+	defer span.End()
+
+	return r.db.WithContext(ctx).Delete(&domain.Order{}, id).Error
+}

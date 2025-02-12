@@ -12,9 +12,9 @@ type Handler struct {
 	resolver *Resolver
 }
 
-func NewHandler(ps ports.ProductService) *Handler {
+func NewHandler(ps ports.ProductService, os ports.OrderService) *Handler {
 	return &Handler{
-		resolver: NewResolver(ps),
+		resolver: NewResolver(ps, os),
 	}
 }
 

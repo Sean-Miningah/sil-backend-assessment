@@ -42,8 +42,9 @@ func (m *MockProductRepository) Delete(ctx context.Context, id uint) error {
 }
 
 func TestProductService_CreateProduct(t *testing.T) {
-	mockRepo := new(MockProductRepository)
-	service := NewProductService(mockRepo)
+	mockProductRepo := new(MockProductRepository)
+	mockOrderRepo := new(MockOrderRepository)
+	service := NewProductService(mockProductRepo, mockOrderRepo)
 
 	product := &domain.Product{
 		Name:       "Test Product",
@@ -51,11 +52,11 @@ func TestProductService_CreateProduct(t *testing.T) {
 		CategoryID: 1,
 	}
 
-	mockRepo.On("Create", mock.Anything, product).Return(nil)
+	mockProductRepo.On("Create", mock.Anything, product).Return(nil)
 
 	err := service.CreateProduct(context.Background(), product)
 	assert.NoError(t, err)
-	mockRepo.AssertExpectations(t)
+	mockProductRepo.AssertExpectations(t)
 }
 
 func TestProductService_GetProduct(t *testing.T) {
