@@ -44,3 +44,11 @@ func (s *orderService) UpdateOrder(ctx context.Context, order *domain.Order) err
 
 	return s.orderRepo.Update(ctx, order)
 }
+
+// create a delete order route that delete orders items forthat order then it deletes the order after
+func (s *orderService) DeleteOrder(ctx context.Context, id uint) error {
+	ctx, span := otel.Tracer("").Start(ctx, "OrderService.DeleteOrder")
+	defer span.End()
+
+	return s.orderRepo.Delete(ctx, id)
+}

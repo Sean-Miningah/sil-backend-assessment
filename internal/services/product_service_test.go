@@ -60,8 +60,9 @@ func TestProductService_CreateProduct(t *testing.T) {
 }
 
 func TestProductService_GetProduct(t *testing.T) {
-	mockRepo := new(MockProductRepository)
-	service := NewProductService(mockRepo)
+	mockProductRepo := new(MockProductRepository)
+	mockOrderRepo := new(MockOrderRepository)
+	service := NewProductService(mockProductRepo, mockOrderRepo)
 
 	expectedProduct := &domain.Product{
 		ID:         1,
@@ -70,10 +71,10 @@ func TestProductService_GetProduct(t *testing.T) {
 		CategoryID: 1,
 	}
 
-	mockRepo.On("Get", mock.Anything, uint(1)).Return(expectedProduct, nil)
+	mockProductRepo.On("Get", mock.Anything, uint(1)).Return(expectedProduct, nil)
 
 	product, err := service.GetProduct(context.Background(), 1)
 	assert.NoError(t, err)
 	assert.Equal(t, expectedProduct, product)
-	mockRepo.AssertExpectations(t)
+	mockProductRepo.AssertExpectations(t)
 }

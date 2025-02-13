@@ -128,3 +128,26 @@ func (h *OrderHandler) Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, order)
 }
+
+func (h *OrderHandler) Delete(c *gin.Context) {
+	ctx, span := otel.Tracer("").Start(c.Request.Context(), "OrderHandler.Delete")
+	defer span.End()
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{Error: "Invalid order ID"})
+		return
+	}
+
+	if err := h.orderService.DeleteOrder(ctx, uint(id)); err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "Failed to delete order"})
+		return
+	}
+
+	if err := h.orderService.DeleteOrder(ctx, uint(id)); err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: "Failed to delete order"})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+}

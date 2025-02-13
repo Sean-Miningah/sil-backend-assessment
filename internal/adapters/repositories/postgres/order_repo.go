@@ -56,3 +56,10 @@ func (r *OrderRepository) Delete(ctx context.Context, id uint) error {
 
 	return r.db.WithContext(ctx).Delete(&domain.Order{}, id).Error
 }
+
+func (r *OrderRepository) DeleteOrderItems(ctx context.Context, orderID uint) error {
+	ctx, span := otel.Tracer("").Start(ctx, "OrderRepository.DeleteOrderItems")
+	defer span.End()
+
+	return r.db.WithContext(ctx).Where("order_id = ?", orderID).Delete(&domain.OrderItem{}).Error
+}

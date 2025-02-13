@@ -27,6 +27,7 @@ type OrderService interface {
 	ListOrders(ctx context.Context) ([]domain.Order, error)
 	GetOrder(ctx context.Context, id uint) (*domain.Order, error)
 	UpdateOrder(ctx context.Context, order *domain.Order) error
+	DeleteOrder(ctx context.Context, id uint) error
 }
 
 type CustomerService interface {

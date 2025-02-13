@@ -38,3 +38,8 @@ func (m *MockOrderRepository) Delete(ctx context.Context, id uint) error {
 	args := m.Called(ctx, id)
 	return args.Error(0)
 }
+
+func (m *MockOrderRepository) DeleteOrderItems(ctx context.Context, orderID uint) error {
+	args := m.Called(ctx, orderID)
+	return args.Error(0)
+}
