@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sean-miningah/sil-backend-assessment/internal/adapters/handlers/graphql"
@@ -13,7 +14,24 @@ import (
 	"github.com/sean-miningah/sil-backend-assessment/pkg/config"
 	"github.com/sean-miningah/sil-backend-assessment/pkg/database"
 	"github.com/sean-miningah/sil-backend-assessment/pkg/telemetry"
+
+	"github.com/zitadel/zitadel-go/v3/pkg/authorization"
+	"github.com/zitadel/zitadel-go/v3/pkg/authorization/oauth"
+	"github.com/zitadel/zitadel-go/v3/pkg/client"
+	"github.com/zitadel/zitadel-go/v3/pkg/http/middleware"
+	"github.com/zitadel/zitadel-go/v3/pkg/zitadel"
 )
+
+// Application should
+// Input and upload products with their various categories
+// Return average product price for a category
+// Make Order
+
+// Auth using openid connect
+// When order is made send customer sms alerting them using Africa's Talking API
+// Send Administrator an email about order placed
+// Deploy to k8s
+// Write Docs
 
 func main() {
 	cfg := config.Load(".env")
@@ -52,6 +70,23 @@ func main() {
 	// Initialize handler
 	productHandler := rest.NewProductHandler(productService)
 	orderHandler := rest.NewOrderHandler(orderService)
+
+	// Initialize Zitadel client
+	conf := zitadel.New(cfg.ZitadelIssuerURL)
+
+	authZ, err := authorization.New(ctx, conf, oauth.DefaultAuthorization(cfg.ZitadelKey))
+	if err != nil {
+		log.Error("zitadel sdk could not initialize authorization", "error", err)
+		os.Exit(1)
+	}
+
+	mw := middleware.New(authZ)
+
+	c, err := client.New(ctx, conf)
+	if err != nil {
+		log.Error("zitadel sdk could not initialize authorization", "error", err)
+		os.Exit(1)
+	}
 
 	// Initialize GraphQL handler
 	graphqlHandler := graphql.NewHandler(productService, orderService)

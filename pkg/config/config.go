@@ -17,6 +17,14 @@ type Config struct {
 	ServiceName    string `mapstructure:"TELEMETRY_SERVICE_NAME"`
 	JaegerEndpoint string `mapstructure:"JAEGER_ENDPOINT"`
 	PrometheusPort string `mapstructure:"PROMETHEUS_PORT"`
+
+	// Zitadel fields
+	// ZitadelProjectID  string `mapstructure:"ZITADEL_PROJECT_ID"`
+	ZitadelIssuerURL    string `mapstructure:"ZITADEL_ISSUER_URL"`
+	ZitadelClientID     string `mapstructure:"ZITADEL_CLIENT_ID"`
+	ZitadelClientSecret string `mapstructure:"ZITADEL_CLIENT_SECRET"`
+	ZitadelRedirectURI  string `mapstructure:"ZITADEL_REDIRECT_URI"`
+	// CookieSecret      string `mapstructure:"COOKIE_SECRET"`
 }
 
 func Load(path string) *Config {
