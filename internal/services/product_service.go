@@ -9,44 +9,45 @@ import (
 )
 
 type productService struct {
-	repo ports.ProductRepository
+	productrepo ports.ProductRepository
+	orderrepo   ports.OrderRepository
 }
 
-func NewProductService(repo ports.ProductRepository) ports.ProductService {
-	return &productService{repo: repo}
+func NewProductService(product ports.ProductRepository, order ports.OrderRepository) ports.ProductService {
+	return &productService{productrepo: product, orderrepo: order}
 }
 
 func (s *productService) CreateProduct(ctx context.Context, product *domain.Product) error {
 	ctx, span := otel.Tracer("").Start(ctx, "ProductService.CreateProduct")
 	defer span.End()
 
-	return s.repo.Create(ctx, product)
+	return s.productrepo.Create(ctx, product)
 }
 
 func (s *productService) GetProduct(ctx context.Context, id uint) (*domain.Product, error) {
 	ctx, span := otel.Tracer("").Start(ctx, "ProductService.GetProduct")
 	defer span.End()
 
-	return s.repo.Get(ctx, id)
+	return s.productrepo.Get(ctx, id)
 }
 
 func (s *productService) ListProducts(ctx context.Context) ([]domain.Product, error) {
 	ctx, span := otel.Tracer("").Start(ctx, "ProductService.ListProducts")
 	defer span.End()
 
-	return s.repo.List(ctx)
+	return s.productrepo.List(ctx)
 }
 
 func (s *productService) UpdateProduct(ctx context.Context, product *domain.Product) error {
 	ctx, span := otel.Tracer("").Start(ctx, "ProductService.UpdateProduct")
 	defer span.End()
 
-	return s.repo.Update(ctx, product)
+	return s.productrepo.Update(ctx, product)
 }
 
 func (s *productService) DeleteProduct(ctx context.Context, id uint) error {
 	ctx, span := otel.Tracer("").Start(ctx, "ProductService.DeleteProduct")
 	defer span.End()
 
-	return s.repo.Delete(ctx, id)
+	return s.productrepo.Delete(ctx, id)
 }

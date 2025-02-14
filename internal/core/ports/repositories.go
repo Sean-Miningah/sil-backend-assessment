@@ -21,3 +21,12 @@ type CategoryRepository interface {
 	Update(ctx context.Context, category *domain.Category) error
 	Delete(ctx context.Context, id uint) error
 }
+
+type OrderRepository interface {
+	Create(ctx context.Context, order *domain.Order) error
+	List(ctx context.Context) ([]domain.Order, error)
+	Get(ctx context.Context, id uint) (*domain.Order, error)
+	Update(ctx context.Context, order *domain.Order) error
+	Delete(ctx context.Context, id uint) error
+	DeleteOrderItems(ctx context.Context, orderID uint) error
+}
